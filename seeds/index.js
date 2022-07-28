@@ -1,26 +1,26 @@
-const seedCategories = require('./category-seeds');
-const seedProducts = require('./product-seeds');
-const seedTags = require('./tag-seeds');
-const seedProductTags = require('./product-tag-seeds');
+//import models
+const Product = require('../models/Product');
+const Category = require('../models/Category');
+const Tag = require('../models/Tag');
+const ProductTag = require('../models/ProductTag');
 
-const sequelize = require('../config/connection');
+//Product belongs to Category
+Product.belongsTo(Category, {
+    foreignKey: 'category_id'
+});
 
-const seedAll = async () => {
-  await sequelize.sync({ force: true });
-  console.log('\n----- DATABASE SYNCED -----\n');
-  await seedCategories();
-  console.log('\n----- CATEGORIES SEEDED -----\n');
+Category.hasMany(Product, {
+    foreignKey:'category_id'
+});
 
-  await seedProducts();
-  console.log('\n----- PRODUCTS SEEDED -----\n');
+Product.belongsToMany(Tag, {
+    through: ProductTag,
+    foreignKey: 'product_id',
+});
 
-  await seedTags();
-  console.log('\n----- TAGS SEEDED -----\n');
+Tag.belongsToMany(Product, {
+    through: ProductTag,
+    foreignKey: 'tag_id',
+});
 
-  await seedProductTags();
-  console.log('\n----- PRODUCT TAGS SEEDED -----\n');
-
-  process.exit(0);
-};
-
-seedAll();
+module.exports ={ Product, Category, Tag, ProductTag, };
