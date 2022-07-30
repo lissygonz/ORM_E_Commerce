@@ -18,7 +18,9 @@ Product.belongsToMany(Tag, {
     foreignKey:'product_id',
 });
 
-Tag.belongsToMany(Product.addHook, {
+Tag.belongsToMany(Product, {
     through: ProductTag,
     foreignKey: 'tag_id',
 });
+
+module.exports = {Product, Category, Tag, ProductTag};
